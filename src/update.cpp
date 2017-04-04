@@ -293,7 +293,28 @@ void Update::set_units(const char *style)
 
     dt = 0.00045;
     neighbor->skin = 0.1;
-
+  
+  } else if (strcmp(style,"gmx") == 0) {
+    force->boltz = 8.3144621e-3;
+    force->hplanck = 0.39903;
+    force->mvv2e = 1.0;
+    force->ftm2v = 1.0;
+    force->mv2d = 1.66053892;
+    force->nktv2p = 0.138065;
+    force->qqr2e = 138.935485;
+    force->qe2f = 1.0;
+    force->vxmu2f = 6.022140857e4;
+    force->xxt2kmu = 0.01;
+    force->e_mass = 5.48579909e-4;
+    force->hhmrr2e = 0.00403324;
+    force->mvh2r = 0.0; //not set
+    force->angstrom = 1.0e-1;
+    force->femtosecond = 1.0e-3;
+    force->qelectron = 1.0;
+    
+    dt = 0.001;
+    neighbor->skin = 0.2;
+      
   } else error->all(FLERR,"Illegal units command");
 
   delete [] unit_style;
