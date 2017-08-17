@@ -41,6 +41,7 @@ void PairDPDTstatUser::compute(int eflag, int vflag)
   double xtmp,ytmp,ztmp,delx,dely,delz,fpair,fforce;
   double vxtmp,vytmp,vztmp,delvx,delvy,delvz;
   double rsq,r,rinv,dot,wd,randnum,factor_dpd;
+  double projx,projy,projz;
   int *ilist,*jlist,*numneigh,**firstneigh;
 
   if (eflag || vflag) ev_setup(eflag,vflag);
@@ -108,6 +109,11 @@ void PairDPDTstatUser::compute(int eflag, int vflag)
         wd = friction_style->single(i,j,itype,jtype,rsq,factor_dpd,factor_dpd,fforce);
         randnum = random->gaussian();
 
+        projx=0.;
+        projy=0.;
+        projz=0.;
+
+
         fpair =  wd*dot*rinv;
         fpair += sigma[itype][jtype]*sqrt(wd)*randnum*dtinvsqrt;
         fpair *= factor_dpd*rinv;
@@ -166,12 +172,16 @@ void PairDPDTstatUser::settings(int narg, char **arg)
   }
 
   int sflag;
+  char stylename[256];
+
   if(has_style){
-    friction_style = force->new_pair(arg[6],1,sflag);
+    strcpy(stylename,&(arg[6][1]));
+    friction_style = force->new_pair(stylename,1,sflag);
     friction_style->settings(narg-7,&(arg[7]));
   }
   else{
-    friction_style = force->new_pair(arg[4],1,sflag);
+    strcpy(stylename,&(arg[4][1]));
+    friction_style = force->new_pair(stylename,1,sflag);
     friction_style->settings(narg-5,&(arg[5]));
   }
 
